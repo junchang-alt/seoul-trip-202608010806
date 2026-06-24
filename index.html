@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🇰🇷 首爾六日 2026</title>
+<style>
+:root {
+  --cream:       #FAF6EE;
+  --cream-deep:  #F0E8D8;
+  --milk:        #FDF9F3;
+  --tan:         #C8A87A;
+  --tan-dark:    #9B7A50;
+  --brown:       #6B4C3B;
+  --brown-light: #A07855;
+  --gold:        #D4A853;
+  --gold-soft:   #EDD9B8;
+  --text:        #3D2B1F;
+  --text-mid:    #6B4C3B;
+  --text-soft:   #9B7A50;
+  --white:       #FFFDF9;
+  --shadow:      rgba(107,76,59,.13);
+  --radius:      14px;
+  --radius-sm:   8px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--cream);font-family:'Helvetica Neue',Arial,'Noto Sans TC',sans-serif;color:var(--text);}
+
+/* ── Topbar ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(135deg,var(--brown) 0%,var(--tan-dark) 100%);
+  padding:10px 16px 8px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 2px 12px var(--shadow);
+}
+#topbar .flag{font-size:22px;line-height:1;}
+#topbar h1{margin:0;font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.2;}
+#topbar .sub{font-size:11px;color:rgba(255,255,255,.75);margin:0;}
+
+/* ── Content area ── */
+#content{
+  padding-top:70px;
+  padding-bottom:72px;
+  min-height:100vh;
+}
+
+/* ── Page sections ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── Day tabs (itinerary) ── */
+.day-tabs{
+  display:flex;overflow-x:auto;gap:6px;
+  padding:14px 16px 8px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  background:var(--milk);
+  position:sticky;top:58px;z-index:50;
+  box-shadow:0 2px 6px var(--shadow);
+}
+.day-tabs::-webkit-scrollbar{display:none;}
+.day-tab{
+  flex-shrink:0;
+  background:var(--cream-deep);
+  border:1.5px solid var(--tan);
+  color:var(--brown);
+  padding:7px 14px;
+  border-radius:20px;
+  font-size:12px;font-weight:600;
+  cursor:pointer;transition:.2s;
+  white-space:nowrap;
+}
+.day-tab.active{background:var(--brown);border-color:var(--brown);color:#fff;}
+
+/* ── Day content ── */
+.day-section{display:none;}
+.day-section.active{display:block;}
+
+/* ── Day banner ── */
+.day-banner{
+  background:linear-gradient(135deg,var(--tan-dark) 0%,var(--gold) 100%);
+  margin:0 0 2px;
+  padding:14px 20px 12px;
+  display:flex;align-items:center;gap:12px;
+}
+.day-banner .dnum{
+  background:rgba(255,255,255,.22);
+  border-radius:10px;
+  padding:6px 12px;
+  font-size:22px;font-weight:800;color:#fff;line-height:1;
+}
+.day-banner .dinfo h2{margin:0;font-size:16px;font-weight:700;color:#fff;}
+.day-banner .dinfo p{margin:2px 0 0;font-size:11px;color:rgba(255,255,255,.82);}
+
+/* ── Timeline items ── */
+.tl-wrap{padding:10px 14px 6px;}
+.tl-item{
+  display:flex;gap:10px;
+  margin-bottom:10px;
+}
+.tl-left{
+  display:flex;flex-direction:column;align-items:center;
+  min-width:52px;
+}
+.tl-time{
+  font-size:11px;font-weight:700;color:var(--brown);
+  background:var(--gold-soft);
+  border-radius:8px;padding:3px 6px;
+  white-space:nowrap;text-align:center;line-height:1.3;
+}
+.tl-line{flex:1;width:2px;background:var(--cream-deep);margin-top:4px;}
+.tl-card{
+  flex:1;
+  background:var(--white);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  box-shadow:0 2px 8px var(--shadow);
+  border-left:3px solid var(--tan);
+}
+.tl-card.type-meal{border-left-color:#D4854A;}
+.tl-card.type-food{border-left-color:#D4854A;}
+.tl-card.type-spot{border-left-color:#5C9E6B;}
+.tl-card.type-shop{border-left-color:#7B6CB5;}
+.tl-card.type-transit{border-left-color:#5594C5;}
+.tl-card.type-hotel{border-left-color:var(--gold);}
+.tl-card.type-night{border-left-color:#C24B4B;}
+
+.tl-title{
+  font-size:14px;font-weight:700;color:var(--text);
+  margin:0 0 5px;line-height:1.35;
+}
+.tl-badge{
+  display:inline-block;
+  font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:10px;
+  margin-bottom:5px;
+}
+.badge-meal{background:#FFF0E6;color:#C05A1F;}
+.badge-spot{background:#E8F5EC;color:#2E7D4F;}
+.badge-shop{background:#EDE8F8;color:#5C3D9E;}
+.badge-transit{background:#E5F0FA;color:#1F6EA6;}
+.badge-hotel{background:#FEF8E7;color:#9B6A00;}
+.badge-night{background:#FDE8E8;color:#A62020;}
+.badge-food{background:#FFF0E6;color:#C05A1F;}
+
+.tl-note{
+  font-size:12px;color:var(--text-mid);
+  line-height:1.65;margin:4px 0;
+  white-space:pre-line;
+}
+.tl-warn{
+  background:#FFF8E1;border-left:3px solid #F9A825;
+  border-radius:4px;padding:5px 8px;
+  font-size:11px;color:#6D4C00;margin-top:5px;
+}
+.tl-backup{
+  margin-top:7px;padding:6px 10px;
+  background:var(--cream);border-radius:var(--radius-sm);
+  font-size:11px;color:var(--text-soft);
+}
+.tl-backup::before{content:'備用：';font-weight:600;color:var(--tan-dark);}
+
+/* Naver map button */
+.nav-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:linear-gradient(135deg,#03C75A 0%,#02A44B 100%);
+  color:#fff;font-size:11px;font-weight:700;
+  padding:6px 12px;border-radius:20px;
+  text-decoration:none;margin-top:7px;
+  box-shadow:0 2px 6px rgba(3,199,90,.3);
+  letter-spacing:.3px;
+}
+.nav-btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
+
+/* transport info */
+.tl-transport{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-top:6px;
+}
+.trans-chip{
+  background:var(--cream-deep);
+  border-radius:6px;padding:3px 8px;
+  font-size:11px;color:var(--text-mid);
+}
+.trans-chip strong{color:var(--brown);}
+
+/* ── Bottom nav ── */
+#bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--white);
+  border-top:1.5px solid var(--cream-deep);
+  display:flex;
+  box-shadow:0 -3px 16px var(--shadow);
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:7px 4px 10px;gap:2px;
+  background:none;border:none;cursor:pointer;
+  color:var(--text-soft);font-size:9.5px;font-weight:600;
+  transition:.15s;letter-spacing:.3px;
+}
+.nav-item .ni{font-size:21px;line-height:1;}
+.nav-item.active{color:var(--brown);}
+.nav-item.active .ni-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gold);margin:0 auto;margin-top:2px;
+}
+
+/* ── Section cards (transport/hotel/packing/budget) ── */
+.section-wrap{padding:16px 14px;}
+.sec-card{
+  background:var(--white);border-radius:var(--radius);
+  box-shadow:0 2px 10px var(--shadow);
+  margin-bottom:14px;overflow:hidden;
+}
+.sec-hdr{
+  background:linear-gradient(135deg,var(--brown) 0%,var(--brown-light) 100%);
+  padding:12px 16px;
+  font-size:14px;font-weight:700;color:#fff;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-body{padding:14px 16px;}
+.info-row{
+  display:flex;gap:6px;padding:8px 0;
+  border-bottom:1px solid var(--cream-deep);
+  align-items:flex-start;
+}
+.info-row:last-child{border-bottom:none;}
+.info-key{
+  min-width:80px;font-size:12px;font-weight:700;
+  color:var(--brown-light);flex-shrink:0;padding-top:1px;
+}
+.info-val{font-size:12px;color:var(--text);line-height:1.6;flex:1;}
+
+/* ── Transport page ── */
+.transport-day{
+  background:var(--white);border-radius:var(--radius);
+  box-shadow:0 2px 10px var(--shadow);
+  margin-bottom:12px;overflow:hidden;
+}
+.transport-day-hdr{
+  background:linear-gradient(135deg,var(--tan-dark),var(--gold));
+  padding:10px 16px;
+  font-size:13px;font-weight:700;color:#fff;
+}
+.trans-item{
+  padding:10px 16px;
+  border-bottom:1px solid var(--cream-deep);
+  display:flex;flex-direction:column;gap:3px;
+}
+.trans-item:last-child{border-bottom:none;}
+.trans-item .t-route{font-size:13px;font-weight:600;color:var(--text);}
+.trans-item .t-detail{font-size:11px;color:var(--text-soft);}
+.trans-icon{display:inline-block;margin-right:4px;}
+
+/* ── Packing checklist ── */
+.pack-section{margin-bottom:14px;}
+.pack-hdr{
+  background:var(--cream-deep);
+  padding:9px 16px;
+  font-size:13px;font-weight:700;color:var(--brown);
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+}
+.pack-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;
+  border-bottom:1px solid var(--cream);
+  background:var(--white);
+}
+.pack-item:last-child{border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.pack-item input[type=checkbox]{
+  width:18px;height:18px;accent-color:var(--brown);
+  cursor:pointer;flex-shrink:0;
+}
+.pack-item label{font-size:13px;color:var(--text);cursor:pointer;flex:1;}
+.pack-item.done label{text-decoration:line-through;color:var(--text-soft);}
+
+/* ── Budget table ── */
+.budget-table{width:100%;border-collapse:collapse;font-size:12px;}
+.budget-table th{
+  background:var(--brown);color:#fff;
+  padding:8px 10px;text-align:center;font-size:11px;
+}
+.budget-table td{
+  padding:8px 10px;border-bottom:1px solid var(--cream-deep);
+  text-align:center;vertical-align:top;
+}
+.budget-table tr:last-child td{background:var(--gold-soft);font-weight:700;color:var(--brown);}
+.budget-table tr:nth-child(even) td{background:var(--cream);}
+.budget-note{font-size:11px;color:var(--text-soft);margin-top:6px;padding:0 2px;}
+
+/* ── Practical info ── */
+.practical-item{
+  padding:10px 0;
+  border-bottom:1px solid var(--cream-deep);
+}
+.practical-item:last-child{border-bottom:none;}
+.pi-key{font-size:12px;font-weight:700;color:var(--brown-light);margin-bottom:3px;}
+.pi-val{font-size:12px;color:var(--text);line-height:1.65;white-space:pre-line;}
+
+/* ── Hero deco ── */
+.page-hero{
+  background:linear-gradient(135deg,var(--brown) 0%,var(--tan-dark) 60%,var(--gold) 100%);
+  padding:24px 20px 20px;
+  text-align:center;color:#fff;
+}
+.page-hero h2{margin:0 0 4px;font-size:20px;}
+.page-hero p{margin:0;font-size:12px;opacity:.82;}
+.hangul-deco{font-size:28px;letter-spacing:4px;opacity:.35;margin-bottom:6px;}
+
+/* ── Floating deco ── */
+.page-deco{
+  display:flex;justify-content:center;gap:16px;
+  padding:12px 20px;background:var(--cream-deep);
+  font-size:11px;color:var(--text-soft);flex-wrap:wrap;
+}
+.page-deco span{display:flex;align-items:center;gap:4px;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="flag">🇰🇷</div>
+  <div>
+    <h1>首爾六日旅遊手冊</h1>
+    <p class="sub">2026 / 8 / 1（六）～ 8 / 6（四） ∙ 8人</p>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+
+<!-- ───────── PAGE: 每日行程 ───────── -->
+<div class="page active" id="page-itinerary">
+
+  <div class="day-tabs" id="dayTabs">
+    <button class="day-tab active" onclick="switchDay(0)">Day1 8/1</button>
+    <button class="day-tab" onclick="switchDay(1)">Day2 8/2</button>
+    <button class="day-tab" onclick="switchDay(2)">Day3 8/3</button>
+    <button class="day-tab" onclick="switchDay(3)">Day4 8/4</button>
+    <button class="day-tab" onclick="switchDay(4)">Day5 8/5</button>
+    <button class="day-tab" onclick="switchDay(5)">Day6 8/6</button>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day-section active" id="day-0">
+    <div class="day-banner">
+      <div class="dnum">1</div>
+      <div class="dinfo">
+        <h2>出發！弘大抵達日</h2>
+        <p>8/1（六）∙ 飛行→弘大商圈→金熟成烤肉</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">05:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">✈️ 交通</span>
+          <p class="tl-title">小港機場集合</p>
+          <p class="tl-note">建議提早2小時抵達，攜帶護照、確認行李重量。</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">06:55</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">✈️ 起飛</span>
+          <p class="tl-title">長榮航空 BR146 小港 → 仁川T1</p>
+          <p class="tl-note">飛行約3h 50m，機上供早餐。</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">10:45</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🛬 入境</span>
+          <p class="tl-title">仁川機場T1 入境</p>
+          <p class="tl-note">入境審查 → 行李提領 → 換SIM / 領WiFi → 換匯 → 包車等候</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>機場換匯</strong> 匯率尚可，可先換部分</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:15</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚐 包車</span>
+          <p class="tl-title">包車 仁川機場 → 弘大飯店</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>時間</strong> 60–80 min</div>
+            <div class="trans-chip"><strong>費用</strong> 包車另計</div>
+          </div>
+          <a class="nav-btn" href="https://naver.me/xDAjwJrX" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 美居酒店
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">12:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍚 午餐 首選</span>
+          <p class="tl-title">神仙雪濃湯 弘大店</p>
+          <p class="tl-note">清淡牛骨湯飯，老少咸宜，不含生食，適合剛下飛機。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> 約₩12,000／人 ≈ NT$276</div></div>
+          <a class="nav-btn" href="https://naver.me/GxoaFLgA" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 神仙雪濃湯
+          </a>
+          <div class="tl-backup">弘大米腸湯 / 百年土種蔘雞湯</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">14:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 購物</span>
+          <p class="tl-title">弘大商圈輕逛</p>
+          <p class="tl-note">Olive Young 弘大旗艦、MUSINSA Standard、藥局掃貨（check-in 前先走走）</p>
+          <a class="nav-btn" href="https://naver.me/IDY7m5jK" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 弘大商圈
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">15:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-hotel">
+          <span class="tl-badge badge-hotel">🏨 住宿</span>
+          <p class="tl-title">飯店 Check-in — 美居大使酒店</p>
+          <p class="tl-note">서울 마포구 동교로 130｜入住後稍作休息、分配房間。</p>
+          <a class="nav-btn" href="https://naver.me/xDAjwJrX" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 美居大使酒店
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">16:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 購物</span>
+          <p class="tl-title">弘大街區購物主力時段</p>
+          <p class="tl-note">MUSINSA 大街、thisisneverthat、EPT 弘大、ABC MART 弘大、Adererror 弘大&#10;（此時段人較少，建議先掃完主要購物街）</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-food">
+          <span class="tl-badge badge-food">🍡 點心</span>
+          <p class="tl-title">首爾糖餅延南店（堅果／起司口味）</p>
+          <p class="tl-note">步行15分鐘到延南洞，排隊名攤。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩3,500／個 ≈ NT$80</div></div>
+          <a class="nav-btn" href="https://naver.me/55Gu64tS" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 首爾糖餅延南店
+          </a>
+          <div class="tl-backup">自然島鹽麵包延南店（原味＋奶油）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">19:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍖 晚餐 首選</span>
+          <p class="tl-title">金熟成（김숙성）水芹菜烤肉</p>
+          <p class="tl-note">弘大店，評價最高水芹菜烤豬五花，建議提前訂位。</p>
+          <div class="tl-warn">⚠️ 熟食烤肉，不含生牛肉，全員可食</div>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> 約₩25,000／人 ≈ NT$575（8人約NT$4,600）</div></div>
+          <a class="nav-btn" href="https://naver.me/Gy8N9vWt" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 金熟成
+          </a>
+          <div class="tl-backup">kkotsal家 / 宇宙家燒肉</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">21:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-night">
+          <span class="tl-badge badge-night">🌙 宵夜①</span>
+          <p class="tl-title">東大門獵奇炒年糕 弘大店</p>
+          <p class="tl-note">玫瑰醬半半＋年糕＋起司＋善良辣，必點組合！</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩8,000／份 ≈ NT$184</div></div>
+          <a class="nav-btn" href="https://naver.me/5YIXX3La" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 東大門獵奇炒年糕
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">22:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-night">
+          <span class="tl-badge badge-night">🍗 宵夜②</span>
+          <p class="tl-title">Puradak Chicken 弘大（必吃黑蒜炸雞）</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩18,000／份 ≈ NT$414</div></div>
+          <a class="nav-btn" href="https://naver.me/GUVylqV2" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → Puradak Chicken
+          </a>
+          <div class="tl-backup">Nomore Pizza（玉蜀黍蝦仁披薩） / 延南洞布帳馬車街</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-0 -->
+
+  <!-- DAY 2 -->
+  <div class="day-section" id="day-1">
+    <div class="day-banner">
+      <div class="dnum">2</div>
+      <div class="dinfo">
+        <h2>星空圖書館 · 水族館 · 聖水洞</h2>
+        <p>8/2（日）∙ COEX → 聖水洞排骨鍋</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">08:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">☕ 早餐</span>
+          <p class="tl-title">GS25 / CU 超商或飯店附近麵包店</p>
+          <p class="tl-note">飯糰、三角飯糰、拿鐵咖啡輕食出發。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩3,000–6,000 ≈ NT$70–138</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚇 地鐵</span>
+          <p class="tl-title">出發 → 星空圖書館（COEX）</p>
+          <p class="tl-note">地鐵2號線 홍대입구 → 삼성역，約35分鐘。</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>費用</strong> ₩1,550 ≈ NT$36</div>
+            <div class="trans-chip"><strong>時間</strong> 35 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">📚 景點</span>
+          <p class="tl-title">Starfield Library 星空圖書館</p>
+          <p class="tl-note">別마당 도서관，巨大書牆免費參觀，開店前人少最好拍照。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>入場</strong> 免費</div></div>
+          <a class="nav-btn" href="https://naver.me/FjKdGpqH" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 星空圖書館
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">10:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 購物</span>
+          <p class="tl-title">COEX Mall 地下街</p>
+          <p class="tl-note">Aritaum / Olive Young COEX / 書店逛逛。</p>
+          <a class="nav-btn" href="https://naver.me/GDk3bHvN" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → COEX Mall
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">12:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍽 午餐 首選</span>
+          <p class="tl-title">COEX 地下美食街 — 솔반 韓式家常套餐</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩15,000 ≈ NT$345</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">14:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🐠 景點</span>
+          <p class="tl-title">COEX Aquarium 水族館</p>
+          <p class="tl-note">코엑스 아쿠아리움，海洋隧道必看，約2小時。建議網路預購約9折。</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>成人</strong> ₩29,000 ≈ NT$667</div>
+            <div class="trans-chip"><strong>青少年</strong> ₩24,000 ≈ NT$552</div>
+          </div>
+          <a class="nav-btn" href="https://naver.me/xMl7jRMl" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → COEX Aquarium
+          </a>
+          <div class="tl-backup">奉恩寺（免費，COEX旁）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">16:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚇 地鐵</span>
+          <p class="tl-title">移動至聖水洞</p>
+          <p class="tl-note">地鐵2號線 삼성 → 성수，約10分鐘。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩1,550 ≈ NT$36</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 聖水洞</span>
+          <p class="tl-title">聖水洞文化街區品牌漫步</p>
+          <p class="tl-note">HAUS NOWHERE SEOUL、Matin Kim、Tamburins、Stand Oil、Amore Seongsu、Dior Seongsu</p>
+          <a class="nav-btn" href="https://naver.me/GpZI2Zxl" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 聖水洞商圈
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-food">
+          <span class="tl-badge badge-food">🍡 點心</span>
+          <p class="tl-title">自然島鹽麵包 聖水店</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩3,500／個 ≈ NT$80</div></div>
+          <a class="nav-btn" href="https://naver.me/Fb3LuaGo" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 自然島鹽麵包聖水
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🥩 晚餐排隊</span>
+          <p class="tl-title">⚠️ 17:30前到！傳聞中的聖水馬鈴薯排骨鍋</p>
+          <p class="tl-note">必排隊名店，17:30前到場，18:00開始入座。燉排骨，全員可食。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩18,000／人 ≈ NT$414</div></div>
+          <a class="nav-btn" href="https://naver.me/IVT7j9TT" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 聖水馬鈴薯排骨鍋
+          </a>
+          <div class="tl-backup">聖水 Silbiok 牛肉海帶湯 / 本家一隻雞</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">19:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-food">
+          <span class="tl-badge badge-food">🍦 點心</span>
+          <p class="tl-title">Alver Gelato 聖水（開心果必點）</p>
+          <p class="tl-note">評價極高，排隊約15–20分鐘。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩6,500 ≈ NT$150</div></div>
+          <a class="nav-btn" href="https://naver.me/5mHqRQiX" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → Alver Gelato
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">20:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚇 返回</span>
+          <p class="tl-title">地鐵2號線 성수 → 홍대입구，約25分鐘</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩1,550 ≈ NT$36</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-1 -->
+
+  <!-- DAY 3 -->
+  <div class="day-section" id="day-2">
+    <div class="day-banner">
+      <div class="dnum">3</div>
+      <div class="dinfo">
+        <h2>北村 · 景福宮 · 廣藏 · 明洞</h2>
+        <p>8/3（一）∙ 安國站早餐 → 烤肉晚餐</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">07:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🧄 早餐 首選</span>
+          <p class="tl-title">Garlic Boy 安國店</p>
+          <p class="tl-note">香蒜麵包名店，周一正常營業，早去人少。地鐵3號線 홍대입구 → 안국역，約25分鐘。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩5,000–8,000 ≈ NT$115–184</div></div>
+          <a class="nav-btn" href="https://naver.me/gCLtHcnS" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → Garlic Boy
+          </a>
+          <div class="tl-backup">Artist Bakery（起司鹽可頌／青蔥乳酪貝果）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">08:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🏘 景點</span>
+          <p class="tl-title">北村韓屋村漫步</p>
+          <p class="tl-note">北村八景散步拍照，清晨人少最舒適。&#10;⚠️ 請勿在民居前大聲喧嘩，尊重居民。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>入場</strong> 免費</div></div>
+          <a class="nav-btn" href="https://naver.me/xAr2P9t6" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 北村韓屋村
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🏯 景點</span>
+          <p class="tl-title">景福宮</p>
+          <p class="tl-note">경복궁，停留1.5–2小時，光化門廣場也可拍照。</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>成人</strong> ₩3,000 ≈ NT$69</div>
+            <div class="trans-chip"><strong>青少年</strong> 免費</div>
+          </div>
+          <a class="nav-btn" href="https://naver.me/FUPlFWwV" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 景福宮
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">10:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-food">
+          <span class="tl-badge badge-food">🥞 點心</span>
+          <p class="tl-title">Bukchon 糖餅（三清洞）</p>
+          <p class="tl-note">景福宮外圍步行10分鐘，現做糖餅排隊名店。大熱天可跳過。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩2,000／個 ≈ NT$46</div></div>
+          <a class="nav-btn" href="https://naver.me/5hcl9Cbp" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → Bukchon 糖餅
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🥘 午餐 首選</span>
+          <p class="tl-title">廣藏市場</p>
+          <p class="tl-note">①綠豆煎餅 박가네 빈대떡 ★必吃&#10;②生拌牛肉 유족당 ⚠️ 生食！3位不吃者改選③&#10;③麻藥紫菜包飯 명가 어머니 손 김밥（全員可食）&#10;④平壤冷麵（熟食，全員可食）</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩8,000–15,000 ≈ NT$184–345</div></div>
+          <a class="nav-btn" href="https://naver.me/G7oFTh7H" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 廣藏市場
+          </a>
+          <div class="tl-backup">虎彝食（安國站刀削麵 / 一隻雞）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">13:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-food">
+          <span class="tl-badge badge-food">☕ 點心 + 咖啡</span>
+          <p class="tl-title">益善洞韓屋咖啡街 ＋ 小夏鹽田鹽麵包</p>
+          <p class="tl-note">躲午後大太陽，逛益善洞韓屋巷弄。推薦：청수당（清水堂）/ Le Bier 咖啡廳。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩6,000–9,000 ≈ NT$138–207</div></div>
+          <a class="nav-btn" href="https://naver.me/FnTFuQw5" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 益善洞
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">15:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚇 地鐵</span>
+          <p class="tl-title">移動至明洞</p>
+          <p class="tl-note">地鐵1號/4號線 종로3가 → 명동，約10分鐘。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩1,550 ≈ NT$36</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">15:15</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 明洞購物</span>
+          <p class="tl-title">明洞主街掃貨</p>
+          <p class="tl-note">Olive Young 明洞旗艦、樂天超市、新世界免稅店、ABC MART、城市唱片（시티레코드）、明洞CD店</p>
+          <a class="nav-btn" href="https://naver.me/5XMcRiOA" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 明洞商圈
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">18:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍖 晚餐 首選</span>
+          <p class="tl-title">鐘路烤肉一條街</p>
+          <p class="tl-note">종로 고깃집 골목，熟食烤肉，全員可食。&#10;或迎月燒烤總店（영월식당，離主街步行10分鐘）。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩20,000–30,000／人 ≈ NT$460–690</div></div>
+          <a class="nav-btn" href="https://naver.me/GUVi9tRQ" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 鐘路烤肉街
+          </a>
+          <div class="tl-backup">紫菜包飯天國（김밥천국 明洞）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">20:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-night">
+          <span class="tl-badge badge-night">🏮 宵夜體驗</span>
+          <p class="tl-title">鐘路布帳馬車街</p>
+          <p class="tl-note">종로 포장마차 골목，韓式下酒菜、魚板湯、炒年糕，夜晚燈光氣氛極佳。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩5,000–10,000 ≈ NT$115–230</div></div>
+          <a class="nav-btn" href="https://naver.me/FZImAqGq" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 鐘路布帳馬車街
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">22:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚕 返回</span>
+          <p class="tl-title">計程車 明洞 → 弘大飯店</p>
+          <p class="tl-note">約20–25分鐘，推薦 KakaoT 叫車。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩12,000–16,000 ≈ NT$276–368</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-2 -->
+
+  <!-- DAY 4 -->
+  <div class="day-section" id="day-3">
+    <div class="day-banner">
+      <div class="dnum">4</div>
+      <div class="dinfo">
+        <h2>江華島一日遊</h2>
+        <p>8/4（二）∙ 包車全天 → 晚餐弘大土豆湯</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">07:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">☕ 早餐</span>
+          <p class="tl-title">飯店附近超商 / 麵包店</p>
+          <p class="tl-note">今日全天包車，輕食出發即可。</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">08:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚐 包車</span>
+          <p class="tl-title">包車出發 → 江華島</p>
+          <p class="tl-note">車程約1.5–2小時。行程由包車導遊安排。</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">10:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🏯 景點</span>
+          <p class="tl-title">江華島景點（導遊安排）</p>
+          <p class="tl-note">參考行程：&#10;① 廣城堡（광성보）歷史古蹟&#10;② 傳燈寺（전등사）千年古寺&#10;③ 江華平和瞭望台（眺望北韓）&#10;④ 乾梅蒸加工廠體驗</p>
+          <a class="nav-btn" href="https://naver.me/FyRcqiQH" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 傳燈寺
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">12:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🐟 午餐</span>
+          <p class="tl-title">江華島名物——鰻魚烤（장어구이）</p>
+          <p class="tl-note">搭配蕪菁泡菜（순무김치），全員可食。由導遊帶路。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩15,000–25,000／人 ≈ NT$345–575</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">17:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚐 包車</span>
+          <p class="tl-title">包車返回弘大飯店</p>
+          <p class="tl-note">車程約1.5–2小時，回飯店稍作休息。</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">19:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🥘 晚餐 首選</span>
+          <p class="tl-title">元祖土豆湯（원조감자탕）弘大</p>
+          <p class="tl-note">豬脊骨馬鈴薯湯，晚上暖胃，全員可食。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩15,000／人 ≈ NT$345</div></div>
+          <a class="nav-btn" href="https://naver.me/FUW9JW8V" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 元祖土豆湯
+          </a>
+          <div class="tl-backup">李太祖脊骨土豆湯 / 社長家雞（雞湯）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">21:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🎶 夜生活</span>
+          <p class="tl-title">弘大延南洞夜散步</p>
+          <p class="tl-note">홍대 놀이터 廣場、路邊表演、街頭藝人，放鬆夜晚。</p>
+          <a class="nav-btn" href="https://naver.me/IDY7m5jK" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 弘大商圈
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-3 -->
+
+  <!-- DAY 5 -->
+  <div class="day-section" id="day-4">
+    <div class="day-banner">
+      <div class="dnum">5</div>
+      <div class="dinfo">
+        <h2>望遠市場 · 現代百貨 · 漢江</h2>
+        <p>8/5（三）∙ 市場早午餐 → 漢江泡麵傍晚</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">09:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🥩 早午餐 首選</span>
+          <p class="tl-title">望遠市場（망원시장）掃市場美食</p>
+          <p class="tl-note">① 우이락 脆皮豬五花（必吃！辣椒炸物）&#10;② 可樂餅（고로케）名攤&#10;③ 糖餅 현대호떡&#10;④ 辣炒年糕 분식집&#10;⑤ 할머니 국수 奶奶刀削麵（評4.7★）&#10;⑥ 붕어빵 鯛魚燒（豆沙／奶油）</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>步行</strong> 飯店→市場 15 min</div>
+            <div class="trans-chip"><strong>費用</strong> ₩2,000–8,000／份 ≈ NT$46–184</div>
+          </div>
+          <a class="nav-btn" href="https://naver.me/xRFqMtC5" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 望遠市場
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚇 地鐵</span>
+          <p class="tl-title">地鐵5號線 마포 → 여의도，約20分鐘</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩1,550 ≈ NT$36</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🏬 購物 + 景點</span>
+          <p class="tl-title">汝矣島 the Hyundai Seoul 現代百貨</p>
+          <p class="tl-note">韓國最美百貨公司，5F Sounds Forest室內植物庭院打卡。Tamburins、Gentle Monster、Matin Kim 汝矣島店都在這裡。</p>
+          <a class="nav-btn" href="https://naver.me/FQkY4kqX" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → the Hyundai Seoul
+          </a>
+          <div class="tl-backup">IFC Mall（隔壁，免費逛）</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">13:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍜 午餐 首選</span>
+          <p class="tl-title">現代百貨 B1 美食區 — 진주집 冷麵</p>
+          <p class="tl-note">評分最高的冷麵店，直接前往排隊。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩14,000–20,000 ≈ NT$322–460</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">15:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-spot">
+          <span class="tl-badge badge-spot">🌊 景點</span>
+          <p class="tl-title">汝矣島漢江公園</p>
+          <p class="tl-note">여의도한강공원，漢江大草坪。&#10;可租共享自行車 따릉이（30分鐘 / ₩1,000）騎漢江，夏日黃昏景致絕美。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>自行車</strong> ₩1,000 / 30min ≈ NT$23</div></div>
+          <a class="nav-btn" href="https://naver.me/Fm1KPOMN" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 汝矣島漢江公園
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">18:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍜 晚餐 體驗</span>
+          <p class="tl-title">漢江公園便利店泡麵文化！</p>
+          <p class="tl-note">GS25 / CU 買辛拉麵 / 辣火雞麵，用煮麵機現煮，配漢江夕陽，韓國必體驗。&#10;也可用 Baemin 外送炸雞到漢江！</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩3,000–6,000／人 ≈ NT$69–138</div></div>
+          <div class="tl-backup">치맥（炸雞＋啤酒）漢江旁</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">20:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚕 返回</span>
+          <p class="tl-title">計程車 汝矣島 → 弘大（約20分鐘）</p>
+          <div class="tl-transport">
+            <div class="trans-chip"><strong>計程車</strong> ₩12,000 ≈ NT$276</div>
+            <div class="trans-chip"><strong>地鐵</strong> 5號線換6號線約30min，₩1,550</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-4 -->
+
+  <!-- DAY 6 -->
+  <div class="day-section" id="day-5">
+    <div class="day-banner">
+      <div class="dnum">6</div>
+      <div class="dinfo">
+        <h2>弘大補貨 · 回家了！</h2>
+        <p>8/6（四）∙ 退房 → 仁川T1 BR171 20:45</p>
+      </div>
+    </div>
+    <div class="tl-wrap">
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">08:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">☕ 早餐</span>
+          <p class="tl-title">봉봉브레드 弘大（早8點開，評4.8★）</p>
+          <p class="tl-note">或超商輕食，今天行程輕鬆。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩3,000–7,000 ≈ NT$70–161</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">08:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-shop">
+          <span class="tl-badge badge-shop">🛍 最後補貨</span>
+          <p class="tl-title">弘大最終掃貨</p>
+          <p class="tl-note">大創、樂天超市弘大、Olive Young旗艦、Aland、EPT弘大、藥局最後採購（保健品、面膜、牙貼）。</p>
+          <a class="nav-btn" href="https://naver.me/IDY7m5jK" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 弘大商圈
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:00</div><div class="tl-line"></div></div>
+        <div class="tl-card type-hotel">
+          <span class="tl-badge badge-hotel">🏨 退房</span>
+          <p class="tl-title">飯店 Check-out（12:00前）</p>
+          <p class="tl-note">行李交飯店寄存，等候包車出發（14:30）。</p>
+          <a class="nav-btn" href="https://naver.me/xDAjwJrX" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 美居大使酒店
+          </a>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">11:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-meal">
+          <span class="tl-badge badge-meal">🍚 最後午餐 首選</span>
+          <p class="tl-title">3日韓牛湯飯（삼일한우국밥）</p>
+          <p class="tl-note">弘大附近，或弘大米腸湯（홍대순대국）。⚠️ 要留時間，不能吃太晚。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>費用</strong> ₩10,000–15,000 ≈ NT$230–345</div></div>
+          <a class="nav-btn" href="https://naver.me/FUWQJkqA" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Naver Map → 弘大國밥
+          </a>
+          <div class="tl-backup">百年土種蔘雞湯</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">14:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">🚐 包車</span>
+          <p class="tl-title">包車出發 → 仁川機場T1</p>
+          <p class="tl-note">⚠️ 20:45班機，建議17:30前抵達辦理登機。</p>
+          <div class="tl-transport"><div class="trans-chip"><strong>時間</strong> 60–80 min</div></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">16:30</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">✈️ 機場</span>
+          <p class="tl-title">仁川T1 辦理登機 · 免稅採購 · 退稅</p>
+          <p class="tl-note">長榮航空 BR171 Check-in，記得辦 Tax Refund 退稅！</p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-time">20:45</div><div class="tl-line"></div></div>
+        <div class="tl-card type-transit">
+          <span class="tl-badge badge-transit">✈️ 起飛</span>
+          <p class="tl-title">長榮航空 BR171 仁川T1 → 小港</p>
+          <p class="tl-note">飛行約2小時（時差-1hr），22:40抵達高雄小港機場。&#10;🎉 圓滿結束！</p>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /day-5 -->
+
+</div><!-- /#page-itinerary -->
+
+<!-- ───────── PAGE: 交通 ───────── -->
+<div class="page" id="page-transport">
+  <div class="page-hero">
+    <div class="hangul-deco">교통</div>
+    <h2>交通總覽</h2>
+    <p>機場包車 · 地鐵 · 計程車全攻略</p>
+  </div>
+  <div class="section-wrap">
+
+    <div class="sec-card">
+      <div class="sec-hdr">✈️ 機場包車（已安排）</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">去程</div><div class="info-val">8/1 入境後 → 弘大飯店，車程60–80分鐘</div></div>
+        <div class="info-row"><div class="info-key">江華島</div><div class="info-val">8/4 全天包車，行程由導遊安排</div></div>
+        <div class="info-row"><div class="info-key">回程</div><div class="info-val">8/6 14:30 飯店出發 → 仁川T1，17:30前抵達</div></div>
+        <div class="info-row"><div class="info-key">備注</div><div class="info-val">費用另計，確認出發時間請提前與包車聯繫</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">🚇 地鐵路線摘要</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">Day2</div><div class="info-val">홍대입구→삼성（2號線，35min）→성수（2號線，10min）→홍대입구（2號線，25min）</div></div>
+        <div class="info-row"><div class="info-key">Day3</div><div class="info-val">홍대입구→안국（3號線，25min）→종로3가→명동（1/4號線，10min）</div></div>
+        <div class="info-row"><div class="info-key">Day5</div><div class="info-val">마포→여의도（5號線，20min）</div></div>
+        <div class="info-row"><div class="info-key">單程費用</div><div class="info-val">₩1,550–1,850（依距離），T-money卡搭乘有折扣</div></div>
+        <div class="info-row"><div class="info-key">推薦App</div><div class="info-val">Naver Map / Kakao Metro（中文路線查詢）</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">🚕 計程車使用指引</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">App叫車</div><div class="info-val">KakaoT（推薦，支援中文目的地輸入）</div></div>
+        <div class="info-row"><div class="info-key">起跳費</div><div class="info-val">₩4,800（一般計程車）</div></div>
+        <div class="info-row"><div class="info-key">明洞→弘大</div><div class="info-val">約₩12,000–16,000，20–25分鐘</div></div>
+        <div class="info-row"><div class="info-key">汝矣島→弘大</div><div class="info-val">約₩12,000，20分鐘</div></div>
+        <div class="info-row"><div class="info-key">8人建議</div><div class="info-val">叫2台計程車，每台最多4人含行李</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">💳 T-money 交通卡</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">購買地點</div><div class="info-val">仁川機場 / GS25 / CU 便利商店</div></div>
+        <div class="info-row"><div class="info-key">押金</div><div class="info-val">₩2,500（離境前可退款）</div></div>
+        <div class="info-row"><div class="info-key">用途</div><div class="info-val">地鐵 / 公車 / 計程車均可使用</div></div>
+        <div class="info-row"><div class="info-key">建議儲值</div><div class="info-val">每人 ₩30,000 起，不夠再加值</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ───────── PAGE: 住宿 ───────── -->
+<div class="page" id="page-hotel">
+  <div class="page-hero">
+    <div class="hangul-deco">숙소</div>
+    <h2>住宿資訊</h2>
+    <p>首爾弘大美居大使酒店 全程6晚</p>
+  </div>
+  <div class="section-wrap">
+
+    <div class="sec-card">
+      <div class="sec-hdr">🏨 Mercure Ambassador Seoul Hongdae</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">中文名</div><div class="info-val">首爾弘大美居大使酒店</div></div>
+        <div class="info-row"><div class="info-key">韓文地址</div><div class="info-val">서울 마포구 동교로 130</div></div>
+        <div class="info-row"><div class="info-key">電話</div><div class="info-val">+82-2-3144-0000</div></div>
+        <div class="info-row"><div class="info-key">Check-in</div><div class="info-val">15:00（可提早寄存行李）</div></div>
+        <div class="info-row"><div class="info-key">Check-out</div><div class="info-val">12:00前（可延後寄存至下午）</div></div>
+        <div class="info-row"><div class="info-key">附近地鐵</div><div class="info-val">弘大入口站（홍대입구역）2號線 / 京義中央線 / AREX，步行約10分鐘</div></div>
+        <div class="info-row"><div class="info-key">周邊</div><div class="info-val">弘大商圈5–15min ∙ 延南洞10min ∙ 望遠市場15min</div></div>
+      </div>
+    </div>
+
+    <div style="padding:0 14px 10px;">
+      <a class="nav-btn" href="https://naver.me/xDAjwJrX" target="_blank" style="display:flex;justify-content:center;font-size:13px;padding:12px 20px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;margin-right:6px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        開啟 Naver Map 導航到飯店
+      </a>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">📌 重要時間提醒</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">8/1 抵達</div><div class="info-val">約12:30抵達，先寄存行李再出發吃午餐；15:00辦理入住</div></div>
+        <div class="info-row"><div class="info-key">8/6 退房</div><div class="info-val">12:00前退房，行李寄存至14:30包車出發</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">🧖 推薦汗蒸幕</div>
+      <div class="sec-body">
+        <div class="info-row">
+          <div class="info-key">Dragon Hill Spa</div>
+          <div class="info-val">龍山區（地鐵4號線），24小時，最知名觀光汗蒸幕。7層含游泳池/電影廳/汗蒸房。成人₩22,000起。⚠️ 刺青禁止入場。<br><a class="nav-btn" href="https://naver.me/FjKdFBYn" target="_blank" style="margin-top:6px;display:inline-flex;"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>&nbsp;地圖</a></div>
+        </div>
+        <div class="info-row">
+          <div class="info-key">Spa Lei（女性）</div>
+          <div class="info-val">弘大步行可達，24小時女性專用，含玉石房/皮膚管理，成人₩15,000起。<br><a class="nav-btn" href="https://naver.me/GpZI2Zlz" target="_blank" style="margin-top:6px;display:inline-flex;"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>&nbsp;地圖</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ───────── PAGE: 行李 ───────── -->
+<div class="page" id="page-packing">
+  <div class="page-hero">
+    <div class="hangul-deco">짐</div>
+    <h2>行李清單</h2>
+    <p>夏季8月首爾 · 6日 · 8人</p>
+  </div>
+  <div class="section-wrap">
+    <div id="packingList"></div>
+    <div style="text-align:center;padding:6px 0 14px;">
+      <button onclick="resetChecklist()" style="background:var(--cream-deep);border:1.5px solid var(--tan);color:var(--brown);padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;">重置清單</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────── PAGE: 預算 ───────── -->
+<div class="page" id="page-budget">
+  <div class="page-hero">
+    <div class="hangul-deco">예산</div>
+    <h2>預算 &amp; 實用資訊</h2>
+    <p>花費估算 · 換匯 · 緊急聯絡</p>
+  </div>
+  <div class="section-wrap">
+
+    <div class="sec-card">
+      <div class="sec-hdr">💰 每日花費預估（餐食+交通，不含購物）</div>
+      <div class="sec-body" style="padding:0;overflow:auto;">
+        <table class="budget-table">
+          <tr><th>日期</th><th>主要項目</th><th>KRW/人</th><th>TWD/人≈</th></tr>
+          <tr><td>Day1 8/1</td><td>午+點+晚+宵夜</td><td>65,000</td><td>1,495</td></tr>
+          <tr><td>Day2 8/2</td><td>早+地鐵+水族館+午+晚</td><td>85,000</td><td>1,955</td></tr>
+          <tr><td>Day3 8/3</td><td>早+地鐵+景福宮+午晚</td><td>75,000</td><td>1,725</td></tr>
+          <tr><td>Day4 8/4</td><td>早+江華島午晚</td><td>55,000</td><td>1,265</td></tr>
+          <tr><td>Day5 8/5</td><td>早午+地鐵+午+漢江晚</td><td>45,000</td><td>1,035</td></tr>
+          <tr><td>Day6 8/6</td><td>早+午餐</td><td>22,000</td><td>506</td></tr>
+          <tr><td>合計/人</td><td>6天估算</td><td>347,000</td><td>~7,981</td></tr>
+        </table>
+        <p class="budget-note" style="padding:8px 14px;">8人合計餐食交通估算約 NT$63,850 ∙ 不含機票/住宿/購物/包車。匯率參考：₩1,000 ≈ NT$23。</p>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">💱 換匯建議</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">台灣先換</div><div class="info-val">出發前在台灣銀行/兆豐換韓元，匯率較好。建議每人先換 ₩300,000–500,000。</div></div>
+        <div class="info-row"><div class="info-key">仁川機場</div><div class="info-val">T1入境大廳換匯所匯率尚可，適合補換。⚠️ 避免在明洞路邊攤換（常有陷阱）。</div></div>
+        <div class="info-row"><div class="info-key">信用卡</div><div class="info-val">帶VISA / MASTER，確認無海外手續費後直接刷卡最方便。</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">📱 必備 App</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">Naver Map</div><div class="info-val">韓國最準確地圖，中文搜尋，交通/步行/地鐵都可用。</div></div>
+        <div class="info-row"><div class="info-key">Papago</div><div class="info-val">Naver翻譯，拍照翻譯菜單超方便，比Google準。</div></div>
+        <div class="info-row"><div class="info-key">KakaoT</div><div class="info-val">叫計程車App，最主流，可設定中文目的地。</div></div>
+        <div class="info-row"><div class="info-key">Baemin</div><div class="info-val">外送App，漢江炸雞外送靠這個。</div></div>
+        <div class="info-row"><div class="info-key">Kakao Metro</div><div class="info-val">地鐵路線專用，轉乘提示清楚。</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">🚨 緊急聯絡</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">韓國警察</div><div class="info-val">📞 112</div></div>
+        <div class="info-row"><div class="info-key">消防/救護</div><div class="info-val">📞 119</div></div>
+        <div class="info-row"><div class="info-key">觀光警察</div><div class="info-val">📞 1330（中文可用）</div></div>
+        <div class="info-row"><div class="info-key">台灣辦事處</div><div class="info-val">駐韓國台北代表部 📞 +82-2-399-2767</div></div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-hdr">🌧 雨天 / 大熱天備案</div>
+      <div class="sec-body">
+        <div class="info-row"><div class="info-key">室內優先</div><div class="info-val">COEX Mall / 星空圖書館 / COEX Aquarium 全天候室內。</div></div>
+        <div class="info-row"><div class="info-key">聖水洞熱天</div><div class="info-val">各品牌店均有冷氣，延長室內逛街時間；備用：Seoul Forest 遮蔭散步。</div></div>
+        <div class="info-row"><div class="info-key">江華島雨天</div><div class="info-val">傳燈寺等古寺雨天更有氣氛；告知包車導遊調整。</div></div>
+        <div class="info-row"><div class="info-key">弘大雨天</div><div class="info-val">弘大現代卡Music Library 室內，或延南洞咖啡廳躲雨。</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /#content -->
+
+<!-- BOTTOM NAV -->
+<div id="bottomnav">
+  <button class="nav-item active" onclick="switchPage('itinerary',this)">
+    <div class="ni">📅</div>
+    <span>每日行程</span>
+    <div class="ni-dot"></div>
+  </button>
+  <button class="nav-item" onclick="switchPage('transport',this)">
+    <div class="ni">🚇</div>
+    <span>交通</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('hotel',this)">
+    <div class="ni">🏨</div>
+    <span>住宿</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('packing',this)">
+    <div class="ni">🧳</div>
+    <span>行李</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('budget',this)">
+    <div class="ni">💰</div>
+    <span>預算</span>
+  </button>
+</div>
+
+<script>
+// ── Page switching ──
+function switchPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.remove('active');
+    const dot = b.querySelector('.ni-dot');
+    if(dot) dot.remove();
+  });
+  btn.classList.add('active');
+  const d = document.createElement('div');
+  d.className = 'ni-dot';
+  btn.appendChild(d);
+  window.scrollTo(0,0);
+}
+
+// ── Day switching ──
+function switchDay(idx) {
+  document.querySelectorAll('.day-section').forEach((s,i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.day-tab').forEach((t,i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  document.getElementById('content').scrollTo && document.getElementById('content').scrollTo(0,0);
+  window.scrollTo(0, 58);
+}
+
+// ── Packing checklist ──
+const packingData = [
+  { section:'📋 證件類', items:['護照（效期>6個月）','機票訂位紀錄','飯店訂房確認','信用卡（建議帶2張）','備用現金（台幣先換好）','國際駕照（可備用）'] },
+  { section:'📱 電子3C', items:['手機+充電線','韓國轉接頭（A型）','行動電源（貼絕緣膠帶）','相機/SD卡','eSIM或WiFi機（出發前確認）','耳機'] },
+  { section:'👕 衣物', items:['T恤×6','薄外套×1（室內冷氣強必備）','短褲/裙×3','內衣褲×6+1','舒適步行鞋','涼鞋備用'] },
+  { section:'🧴 盥洗', items:['牙刷/牙膏','洗面乳','防曬乳SPF50+（必帶！）','個人常備藥品','口罩×10','折疊雨傘'] },
+  { section:'🎒 隨身物品', items:['環保袋×2（掃貨用）','小零錢包','暈車藥/腸胃藥','備用眼鏡/隱形眼鏡','頸枕（機上）','Papago / Naver Map已下載'] },
+  { section:'🛍 回程預留', items:['行李磅秤','大容量購物袋','真空壓縮袋','保鮮袋（液體類裝機艙）','行李箱鎖','購物發票（退稅用）'] },
+];
+
+function buildChecklist() {
+  const saved = JSON.parse(localStorage.getItem('seoulPack') || '{}');
+  const container = document.getElementById('packingList');
+  container.innerHTML = '';
+  packingData.forEach((sec, si) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'pack-section';
+    const hdr = document.createElement('div');
+    hdr.className = 'pack-hdr';
+    hdr.textContent = sec.section;
+    wrap.appendChild(hdr);
+    sec.items.forEach((item, ii) => {
+      const key = si + '_' + ii;
+      const row = document.createElement('div');
+      row.className = 'pack-item' + (saved[key] ? ' done' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = 'cb_' + key;
+      cb.checked = !!saved[key];
+      cb.addEventListener('change', () => {
+        saved[key] = cb.checked;
+        localStorage.setItem('seoulPack', JSON.stringify(saved));
+        row.classList.toggle('done', cb.checked);
+      });
+      const lb = document.createElement('label');
+      lb.htmlFor = 'cb_' + key;
+      lb.textContent = item;
+      row.appendChild(cb);
+      row.appendChild(lb);
+      wrap.appendChild(row);
+    });
+    container.appendChild(wrap);
+  });
+}
+
+function resetChecklist() {
+  if(confirm('確定要重置所有勾選嗎？')) {
+    localStorage.removeItem('seoulPack');
+    buildChecklist();
+  }
+}
+
+buildChecklist();
+</script>
+</body>
+</html>
